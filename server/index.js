@@ -41,3 +41,7 @@ timer.start().then(() => {
   logger.info(`Server is running at port ${PORT}`)
   server.listen(PORT)
 })
+
+setTimeout(() => {
+  debugger
+}, 3000)

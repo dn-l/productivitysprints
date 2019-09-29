@@ -3,7 +3,7 @@ const logger = require('./logger')
 
 class Store {
   constructor (prefix) {
-    const client = redis.createClient({ prefix })
+    const client = redis.createClient({ url: process.env.REDIS_URL, prefix })
 
     this._get = (key) => new Promise((
       resolve, reject
