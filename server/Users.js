@@ -1,20 +1,39 @@
-class User {
-  constructor () {
-    this.joined = false
-    this.connectedAt = Date.now()
-  }
-}
-
 class Users {
-  constructor (store) {
+  constructor () {
     this.users = {}
     this.countChangeSubscribers = []
-    this.store = store
   }
 
-  add (id) {
-    this.users[id] = new User()
+  add (id, geo) {
+    let country = 'Unknown'
+    let ll
+    if (geo) {
+      country = geo.country
+      ll = geo.ll
+    }
+    this.users[id] = { country, ll }
     this.countChangeSubscribers.forEach(cb => cb())
+  }
+
+  join (id) {
+    const user = this.users[id]
+    if (user) {
+      user.joined = true
+    }
+    this.countChangeSubscribers.forEach(cb => cb())
+  }
+
+  setProductivity (id, productivity) {
+    const user = this.users[id]
+    if (user) {
+      user.productivity = productivity
+    }
+  }
+
+  idleAll () {
+    for (var id in this.users) {
+      this.users[id].joined = false
+    }
   }
 
   remove (id) {
@@ -22,7 +41,11 @@ class Users {
     this.countChangeSubscribers.forEach(cb => cb())
   }
 
-  get count () {
+  get joinedCount () {
+    return Object.values(this.users).filter(({ joined }) => joined).length
+  }
+
+  get idleCount () {
     return Object.keys(this.users).length
   }
 

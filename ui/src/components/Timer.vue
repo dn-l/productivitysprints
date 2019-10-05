@@ -19,7 +19,10 @@ export default {
   computed: {
     ...mapState(['currentState']),
     timer () {
-      const timeLeft = (this.currentState.endsAt - this.now) || 0
+      const timeLeft = (this.currentState.endsAt - this.now)
+      if (timeLeft <= 0) {
+        return { minutes: '..', seconds: '..' }
+      }
       const minutes = Math.floor(timeLeft / MINUTE)
       const seconds = Math.floor((timeLeft % MINUTE) / SECOND)
       return {

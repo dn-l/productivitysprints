@@ -9,10 +9,16 @@
         :class="todo.isCompleted ? 'red--text' : ''"
         v-model="isCompleted"
         :label="todo.text"
+        :disabled="isCompleted"
       />
     </v-col>
     <v-col class="col-auto">
-      <v-btn @click="deleteTodo" text icon color="accent">
+      <v-btn
+        v-if="!isCompleted"
+        @click="deleteTodo"
+        icon
+        color="accent"
+      >
         <v-icon>mdi-close</v-icon>
       </v-btn>
     </v-col>
@@ -33,7 +39,8 @@ export default {
         return this.todo.isCompleted
       },
       set () {
-        this.$store.dispatch('toggleComplete', this.todo)
+        this.$store.dispatch('setCompleted', this.todo)
+        this.$store.dispatch('socketEmitCompleted', this.todo.text)
       }
     }
   }

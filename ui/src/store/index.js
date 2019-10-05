@@ -1,68 +1,42 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import createPersistedState from 'vuex-persistedstate'
+import mutations from './mutations'
+import actions from './actions'
+import getters from './getters'
 import createSocketPlugin from './createSocketPlugin'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    todos: [],
-    connectedUsersCount: 1,
-    currentState: undefined
+    darkTheme: true,
+    joined: false,
+    todos: [ ],
+    usersCounters: {
+      joined: undefined,
+      idle: undefined
+    },
+    currentState: undefined,
+    feedMuted: false,
+    feed: [ ]
   },
 
-  mutations: {
-    addTodo (state, todo) {
-      state.todos.unshift(todo)
-    },
-    deleteTodo (state, id) {
-      state.todos = state.todos.filter(todo => todo.id !== id)
-    },
-    toggleComplete (state, id) {
-      const todo = state.todos.find(todo => todo.id === id)
-      console.log(todo)
-      if (todo) {
-        todo.isCompleted = !todo.isCompleted
-      }
-    },
-    updateConnectedUsersCount (state, connectedUsersCount) {
-      state.connectedUsersCount = connectedUsersCount
-    },
-    updateCurrentState (state, newState) {
-      state.currentState = newState
-    }
-  },
+  getters,
 
-  actions: {
-    addTodo ({ commit }, { text }) {
-      const id = Math.random().toString(36).substr(2, 9)
-      commit('addTodo', { id, text, isCompleted: false })
-    },
-    deleteTodo ({ commit }, { id }) {
-      commit('deleteTodo', id)
-    },
-    toggleComplete ({ commit }, { id }) {
-      commit('toggleComplete', id)
-    },
-    socketOnConnectedUsersCount ({ commit }, connectedUsersCount) {
-      commit('updateConnectedUsersCount', connectedUsersCount)
-    },
-    socketOnCurrentState ({ commit }, { name, duration, timeLeft = duration }) {
-      commit('updateCurrentState', { name, duration, timeLeft, endsAt: Date.now() + timeLeft })
-    }
-  },
+  mutations,
+
+  actions,
 
   plugins: [
-    createPersistedState({ paths: ['todos'] }),
+    createPersistedState({ paths: ['darkTheme', 'todos'] }),
     createSocketPlugin('/', {
-      eventActions: {
-        connectedUsersCount: 'socketOnConnectedUsersCount',
-        currentState: 'socketOnCurrentState'
-      },
-      emitMutations: {
-
-      }
+      events: [
+        'usersCounters', 'currentState', 'completed'
+      ],
+      emits: [
+        'completed', 'submitProductivity', 'join'
+      ]
     })
   ]
 })
