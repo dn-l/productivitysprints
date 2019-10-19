@@ -1,52 +1,102 @@
+const logger = require('./logger')
+const countries = require('./countries')
+
+class User {
+  constructor (id) {
+    this.connected = true
+    this.id = id
+    this.countryCode = 'Unknown'
+  }
+
+  setGeo (geo) {
+    if (!geo) {
+      return
+    }
+    this.countryCode = geo.country
+    this.ll = geo.ll
+    logger.verbose('User#join', this)
+  }
+
+  join () {
+    if (this.connected) {
+      this.joined = true
+    }
+    logger.verbose('User#join', this)
+  }
+
+  idle () {
+    this.joined = false
+    logger.verbose('User#idle', this)
+  }
+
+  disconnect () {
+    this.joined = false
+    this.connected = false
+    logger.verbose('User#disconnect', this)
+  }
+
+  setReport (report) {
+    this.report = report
+    logger.verbose('User#setReport', this)
+  }
+}
+
 class Users {
   constructor () {
-    this.users = {}
-    this.countChangeSubscribers = []
+    this.items = { }
   }
 
-  add (id, geo) {
-    let country = 'Unknown'
-    let ll
-    if (geo) {
-      country = geo.country
-      ll = geo.ll
-    }
-    this.users[id] = { country, ll }
-    this.countChangeSubscribers.forEach(cb => cb())
-  }
-
-  join (id) {
-    const user = this.users[id]
-    if (user) {
-      user.joined = true
-    }
-    this.countChangeSubscribers.forEach(cb => cb())
-  }
-
-  setProductivity (id, productivity) {
-    const user = this.users[id]
-    if (user) {
-      user.productivity = productivity
-    }
+  add (id) {
+    const user = new User(id)
+    this.items[id] = user
+    logger.verbose('Users#add', user)
+    return user
   }
 
   idleAll () {
-    for (var id in this.users) {
-      this.users[id].joined = false
+    for (var id in this.items) {
+      this.items[id].idle()
     }
+    logger.verbose('Users#idleAll')
   }
 
-  remove (id) {
-    delete this.users[id]
-    this.countChangeSubscribers.forEach(cb => cb())
+  cleanup () {
+    Object.keys(this.items).forEach(id => {
+      if (!this.items[id].connected) {
+        delete this.items[id]
+      }
+    })
   }
 
-  get joinedCount () {
-    return Object.values(this.users).filter(({ joined }) => joined).length
+  getJoinedLl () {
+    return Object.values(this.items).filter(({ connected, joined }) => connected && joined).map(({ ll }) => ll)
   }
 
-  get idleCount () {
-    return Object.keys(this.users).length
+  getIdleLl () {
+    return Object.values(this.items).filter(({ connected, joined }) => connected && !joined).map(({ ll }) => ll)
+  }
+
+  collectStats () {
+    return Object
+      .values(this.items)
+      .filter(({ report }) => report)
+      .reduce((stats, user) => {
+        const { countryCode, report } = user
+        if (stats[countryCode]) {
+          stats[countryCode].reports.push(report)
+        } else {
+          let countryName = 'Unknown'
+          const countryDetails = countries[countryCode]
+          if (countryDetails) {
+            countryName = countryDetails.name
+          }
+          stats[countryCode] = {
+            countryName,
+            reports: [report]
+          }
+        }
+        return stats
+      }, {})
   }
 
   onCountChange (cb) {

@@ -14,7 +14,7 @@ export default (
   const eventActions = { }
   emits.forEach(emitName => {
     const actionName = `socketEmit${capitalize(emitName)}`
-    eventActions[actionName] = () => {}
+    eventActions[actionName] = () => { }
   })
   store.registerModule('socket', { actions: eventActions })
   store.subscribeAction(action => {

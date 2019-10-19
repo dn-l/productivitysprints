@@ -1,8 +1,10 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
-import UsersCounters from './components/UsersCounters'
+import Review from './views/Review.vue'
+import ConnectedUsers from './components/ConnectedUsers'
 import StateCaption from './components/StateCaption'
+import SkipReport from './components/SkipReport'
 
 Vue.use(Router)
 
@@ -16,13 +18,16 @@ export default new Router({
       components: {
         default: Home,
         topBarMiddle: StateCaption,
-        topBarEnd: UsersCounters
+        topBarEnd: ConnectedUsers
       }
     },
     {
       path: '/review',
       name: 'review',
-      component: () => import(/* webpackChunkName: "review" */ './views/Review.vue')
+      components: {
+        default: Review,
+        topBarEnd: SkipReport
+      }
     },
     {
       path: '*',

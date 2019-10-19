@@ -6,7 +6,9 @@
           <Logo style="height: 48.14; width: 53.3;"/>
         </v-btn>
       </v-toolbar-title>
-      <router-view class="text-center flex-grow-1" name="topBarMiddle" />
+      <div class="flex-grow-1">
+        <router-view name="topBarMiddle" />
+      </div>
       <div class="side-block">
         <v-row no-gutters>
           <v-spacer />
@@ -26,12 +28,15 @@ import { mapState } from 'vuex'
 
 export default {
   components: { Logo },
+
   created () {
     this.$vuetify.theme.dark = this.darkTheme
   },
+
   computed: {
     ...mapState(['darkTheme'])
   },
+
   methods: {
     toggleTheme () {
       this.$store.commit('toggleTheme')

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <div class="pt-5 ps-5">
       <h4 class="font-weight-light">SPRINTER</h4>
       <h3>ACCOMPLISHMENT FEED</h3>
@@ -40,6 +40,10 @@ export default {
 </script>
 
 <style scoped>
+  .container {
+    height: 400px;
+  }
+
   .feed {
     height: 250px;
     overflow-y: auto;

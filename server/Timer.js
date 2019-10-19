@@ -15,8 +15,12 @@ class Timer extends TimerStateMachine {
         duration: (process.env.BREAK_DURATION || 17) * MINUTE
       }
     ])
+
     this.subscribe(newState => {
       logger.info('Timer#newState', { newState })
+      if (newState.name === 'sprint') {
+        this.sprintId = Date.now()
+      }
     })
   }
 

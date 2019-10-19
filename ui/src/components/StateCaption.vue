@@ -1,8 +1,5 @@
 <template>
-  <div v-if="currentState">
-    <h1 v-if="currentState.name === 'sprint'">Time left in sprint:</h1>
-    <h1 v-if="currentState.name === 'break'">Take a break.</h1>
-  </div>
+  <h1 class="text-center">{{ caption }}</h1>
 </template>
 
 <script>
@@ -10,7 +7,16 @@ import { mapState } from 'vuex'
 
 export default {
   computed: {
-    ...mapState(['currentState'])
+    ...mapState(['currentState']),
+    caption () {
+      if (!this.currentState) {
+        return '...'
+      }
+      if (this.currentState.name === 'sprint') {
+        return 'Time left in sprint:'
+      }
+      return 'Take a break.'
+    }
   }
 }
 </script>

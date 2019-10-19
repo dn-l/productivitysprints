@@ -27,18 +27,24 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 
 export default {
   computed: {
     ...mapGetters(['isSprint']),
+    ...mapState(['joinedSprintId', 'connectedUsers']),
     countData () {
-      const { joined, usersCounters } = this.$store.state
+      const getCount = arr => {
+        if (arr && arr.length) {
+          return arr.length
+        }
+        return 1
+      }
       let caption = 'SPRINTERS JOINING'
-      let count = usersCounters.idle
-      if (joined && this.isSprint) {
+      let count = getCount(this.connectedUsers.idle)
+      if (this.joinedSprintId && this.isSprint) {
         caption = 'SPRINTERS WORKING'
-        count = usersCounters.joined
+        count = getCount(this.connectedUsers.joined)
       }
       return {
         caption, count

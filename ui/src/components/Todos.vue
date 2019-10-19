@@ -19,6 +19,7 @@
             single-line
             hide-details
             color="accent"
+            autocomplete="off"
           />
         </form>
       </v-col>

@@ -9,7 +9,7 @@
         :class="todo.isCompleted ? 'red--text' : ''"
         v-model="isCompleted"
         :label="todo.text"
-        :disabled="isCompleted"
+        :disabled="isCompleted || !isJoined || !isSprint"
       />
     </v-col>
     <v-col class="col-auto">
@@ -26,14 +26,19 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   props: ['todo'],
+
   methods: {
     deleteTodo () {
       this.$store.dispatch('deleteTodo', this.todo)
     }
   },
+
   computed: {
+    ...mapGetters(['isJoined', 'isSprint']),
     isCompleted: {
       get () {
         return this.todo.isCompleted

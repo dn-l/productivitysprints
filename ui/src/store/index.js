@@ -10,16 +10,17 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    darkTheme: true,
-    joined: false,
+    darkTheme: undefined,
+    joinedSprintId: undefined,
     todos: [ ],
-    usersCounters: {
+    connectedUsers: {
       joined: undefined,
       idle: undefined
     },
     currentState: undefined,
     feedMuted: false,
-    feed: [ ]
+    feed: [ ],
+    stats: undefined
   },
 
   getters,
@@ -29,13 +30,15 @@ export default new Vuex.Store({
   actions,
 
   plugins: [
-    createPersistedState({ paths: ['darkTheme', 'todos'] }),
+    createPersistedState({ paths: [
+      'darkTheme', 'todos', 'joinedSprintId'
+    ] }),
     createSocketPlugin('/', {
       events: [
-        'usersCounters', 'currentState', 'completed'
+        'connectedUsers', 'currentState', 'feedUpdated', 'stats'
       ],
       emits: [
-        'completed', 'submitProductivity', 'join'
+        'completed', 'submitReport', 'join'
       ]
     })
   ]

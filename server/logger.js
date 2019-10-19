@@ -1,7 +1,8 @@
 const winston = require('winston')
+const level = process.env.LOG_LEVEL || 'info'
 
 const logger = winston.createLogger({
-  level: 'verbose',
+  level,
   format: winston.format.combine(
     winston.format.timestamp(),
     winston.format.json()
@@ -10,7 +11,6 @@ const logger = winston.createLogger({
 })
 
 if (process.env.NODE_ENV !== 'production') {
-  logger.level = 'silly'
   logger.add(new winston.transports.Console({
     format: winston.format.combine(
       winston.format.colorize(),
@@ -31,5 +31,7 @@ if (process.env.NODE_ENV !== 'production') {
     format: winston.format.simple()
   }))
 }
+
+logger.info(`Logger uses ${level} level`)
 
 module.exports = logger

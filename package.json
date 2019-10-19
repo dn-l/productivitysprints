@@ -8,7 +8,7 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "start": "node server/index.js",
-    "dev": "nodemon --watch server --inspect server",
+    "dev": "LOG_LEVEL=silly nodemon --watch server --inspect server",
     "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {

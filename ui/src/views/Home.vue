@@ -6,8 +6,10 @@
       <v-spacer />
     </v-toolbar>
     <Map class="map" />
-    <v-row v-if="!joined">
+    <v-row v-if="!isJoined">
       <v-btn
+        :loading="!currentState"
+        :disabled="!currentState"
         color="#B2327A"
         dark
         x-large
@@ -18,25 +20,27 @@
       </v-btn>
     </v-row>
     <Todos class="todos v-card" />
-    <Feed v-if="joined && isSprint" class="feed" />
+    <Feed v-if="isJoined && isSprint" class="bottom-right-panel feed v-card" />
+    <Stats v-if="stats && isJoined && isBreak" class="bottom-right-panel feed v-card" />
   </div>
 </template>
 
 <script>
-import { mapState, mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters, mapState } from 'vuex'
 import Timer from '../components/Timer'
 import Todos from '../components/Todos'
 import Feed from '../components/Feed'
+import Stats from '../components/Stats'
 import Map from '../components/Map'
 
 export default {
   components: {
-    Timer, Todos, Feed, Map
+    Timer, Todos, Feed, Stats, Map
   },
 
   computed: {
-    ...mapState(['joined']),
-    ...mapGetters(['isSprint'])
+    ...mapState(['currentState', 'stats']),
+    ...mapGetters(['isSprint', 'isBreak', 'isJoined'])
   },
 
   methods: {
@@ -68,12 +72,11 @@ export default {
     z-index: 1;
   }
 
-  .feed {
-    position: fixed;
+  .bottom-right-panel {
+    position: absolute;
     right: 40px;
     bottom: 40px;
     width: 450px;
-    height: 400px;
     z-index: 1;
   }
 </style>

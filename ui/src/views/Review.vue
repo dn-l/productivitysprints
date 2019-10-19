@@ -6,10 +6,9 @@
       </v-col>
     </v-row>
     <v-row class="secondary--background">
-      <v-col>
+      <v-col class="pl-12 pr-12">
         <v-slider
           color="accent"
-          step="10"
           v-model="productivity"
           thumb-label="always"
         />
@@ -40,7 +39,7 @@ export default {
   },
   methods: {
     submit () {
-      this.$store.dispatch('socketEmitSubmitProductivity', this.productivity)
+      this.$store.dispatch('submitReport', this.productivity)
       this.$router.replace('/')
     }
   }

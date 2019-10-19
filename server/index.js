@@ -25,39 +25,63 @@ app.use(staticFileMiddleware)
 timer.subscribe(newState => {
   if (newState.name === 'break') {
     users.idleAll()
+    emitConnectedUsers()
   }
-  io.sockets.emit('currentState', { ...newState, timeLeft: newState.duration })
-})
-
-users.onCountChange(() => {
-  io.sockets.emit('usersCounters', {
-    joined: users.joinedCount,
-    idle: users.idleCount
+  io.sockets.emit('currentState', {
+    ...newState,
+    sprintId: timer.sprintId,
+    timeLeft: newState.duration
   })
 })
 
+const emitConnectedUsers = () => {
+  io.sockets.emit('connectedUsers', {
+    joined: users.getJoinedLl(),
+    idle: users.getIdleLl()
+  })
+}
+
+const emitStats = () => {
+  if (timer.currentState.name === 'break') {
+    const stats = users.collectStats()
+    io.sockets.emit('stats', stats)
+  }
+}
+
 io.on('connection', socket => {
-  const { address } = socket.handshake
+  let { address } = socket.handshake
+  const user = users.add(socket.id)
+  if (process.env.NODE_ENV !== 'production') {
+    address = '79.182.55.3'
+  }
   const geo = geoip.lookup(address)
-  users.add(socket.id, geo)
-  socket.emit('currentState', timer.currentState)
+  user.setGeo(geo)
+  logger.verbose('New user connected', { address, geo })
+  emitConnectedUsers()
+  emitStats()
+  socket.emit('currentState', {
+    ...timer.currentState,
+    sprintId: timer.sprintId
+  })
 
   socket.on('completed', todo => {
-    logger.silly('completed', todo)
-    socket.broadcast.emit('completed', todo)
+    logger.verbose('feedUpdated', todo)
+    io.sockets.emit('feedUpdated', todo)
   })
 
   socket.on('join', () => {
-    users.join(socket.id)
+    user.join()
+    emitConnectedUsers()
   })
 
-  socket.on('submitProductivity', productivity => {
-    const { country } = geo
-    socket.broadcast.emit('productivity', { country, productivity })
+  socket.on('submitReport', report => {
+    user.setReport(report)
+    emitStats()
   })
 
   socket.on('disconnect', () => {
-    users.remove(socket.id)
+    user.disconnect()
+    emitConnectedUsers()
   })
 })
 

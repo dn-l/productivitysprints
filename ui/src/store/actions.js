@@ -16,30 +16,49 @@ export default {
     commit('setCompleted', id)
   },
 
-  socketOnUsersCounters ({ commit }, usersCounters) {
-    commit('updateUsersCounters', usersCounters)
+  socketOnConnectedUsers ({ commit }, connectedUsers) {
+    commit('updateConnectedUsers', connectedUsers)
   },
 
   join ({ commit }) {
-    commit('setJoined', true)
+    commit('setJoinedSprintId')
   },
 
   toggleFeedMuted ({ commit }) {
     commit('toggleFeedMuted')
   },
 
-  socketOnCurrentState ({ commit, state }, { name, duration, timeLeft = duration }) {
-    if (name === 'break' && state.joined) {
-      commit('setJoined', false)
-      router.push('review')
-    }
-    commit('updateCurrentState', { name, duration, timeLeft, endsAt: Date.now() + timeLeft })
+  submitReport ({ dispatch, state }, productivity) {
+    const { todos } = state
+    const completed = todos.filter(({ isCompleted }) => isCompleted).length
+    const left = todos.length - completed
+    dispatch('socketEmitSubmitReport', {
+      productivity,
+      completed,
+      left
+    })
   },
 
-  socketOnCompleted ({ commit, state }, text) {
+  socketOnCurrentState ({ commit, state, getters }, { sprintId, name, duration, timeLeft = duration }) {
+    if (name === 'break' && state.joinedSprintId === sprintId) {
+      router.push('review')
+    } else if (name === 'sprint') {
+      if (!getters.isSprint) {
+        commit('removeCompletedTodos')
+      }
+      commit('clearStats')
+    }
+    commit('updateCurrentState', { sprintId, name, duration, timeLeft, endsAt: Date.now() + timeLeft })
+  },
+
+  socketOnFeedUpdated ({ commit, state }, text) {
     if (!state.feedMuted) {
       const id = generateId()
       commit('updateFeed', { id, text })
     }
+  },
+
+  socketOnStats ({ commit }, reports) {
+    commit('updateStats', reports)
   }
 }
