@@ -1,14 +1,7 @@
 const winston = require('winston')
 const level = process.env.LOG_LEVEL || 'info'
 
-const logger = winston.createLogger({
-  level,
-  format: winston.format.combine(
-    winston.format.timestamp(),
-    winston.format.json()
-  ),
-  transports: []
-})
+const logger = winston.createLogger({ level })
 
 if (process.env.NODE_ENV !== 'production') {
   logger.add(new winston.transports.Console({
@@ -28,7 +21,7 @@ if (process.env.NODE_ENV !== 'production') {
   }))
 } else {
   logger.add(new winston.transports.Console({
-    format: winston.format.simple()
+    format: winston.format.json()
   }))
 }
 

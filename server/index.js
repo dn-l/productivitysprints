@@ -49,7 +49,7 @@ const emitStats = () => {
 }
 
 io.on('connection', socket => {
-  let { address } = socket.handshake
+  let [address] = socket.handshake.headers['x-forwarded-for'].split(',')
   const user = users.add(socket.id)
   if (process.env.NODE_ENV !== 'production') {
     address = '79.182.55.3'
