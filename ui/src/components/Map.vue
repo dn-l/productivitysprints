@@ -1,5 +1,9 @@
 <template>
-  <MglMap :accessToken="accessToken" :mapStyle="mapStyle">
+  <MglMap
+    :accessToken="accessToken"
+    :mapStyle="mapStyle"
+    :renderWorldCopies="false"
+  >
     <MglGeojsonLayer
       layerId="heatmap"
       sourceId="heatmap"
