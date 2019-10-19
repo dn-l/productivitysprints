@@ -20,7 +20,7 @@
       </v-btn>
     </v-row>
     <Todos class="todos v-card" />
-    <Feed v-if="isJoined && isSprint" class="bottom-right-panel feed v-card" />
+    <Feed v-if="isJoined && isSprint" class="feed bottom-right-panel feed v-card" />
     <Stats v-if="stats && isJoined && isBreak" class="bottom-right-panel feed v-card" />
   </div>
 </template>
@@ -78,5 +78,9 @@ export default {
     bottom: 40px;
     width: 450px;
     z-index: 1;
+  }
+
+  .feed {
+    height: 410px;
   }
 </style>
