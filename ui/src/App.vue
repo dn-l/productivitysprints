@@ -55,3 +55,9 @@ export default {
     background-color: var(--v-primary-base);
   }
 </style>
+
+<style>
+  html {
+    overflow-y: hidden;
+  }
+</style>
