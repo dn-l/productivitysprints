@@ -3,14 +3,15 @@
     <v-row>
       <v-col class="accent">
         <h2 class="text-center white--text">
-          MY SPRINT TASKS
+          MY SPRINTTASKS
         </h2>
       </v-col>
     </v-row>
-    <v-row>
+    <v-row class="pr-5 pl-5">
       <v-col class="mb-0 pb-0">
         <form v-on:submit="submitTodo" v-on:submit.prevent>
           <v-text-field
+            light
             label="New task (enter to submit)"
             :disabled="todos.length >= 10"
             v-model.trim="newTodo"
@@ -24,7 +25,7 @@
         </form>
       </v-col>
     </v-row>
-    <v-row class="ps-2 overflow-y-auto todo-list">
+    <v-row class="pr-5 pl-5 overflow-y-auto todo-list">
       <v-col class="ma-0">
         <Todo v-if="randomTodo" :todo="randomTodo" />
         <Todo
@@ -88,7 +89,7 @@ export default {
 
 <style scoped>
   .todo-list {
-    height: 400px;
+    height: 300px;
   }
 
   .container {

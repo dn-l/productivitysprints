@@ -1,6 +1,11 @@
 <template>
   <div>
-    <v-toolbar flat color="secondary" height="80">
+    <v-toolbar
+      class="hello"
+      :absolute="true"
+      flat
+      height="120"
+    >
       <v-spacer />
         <Timer />
       <v-spacer />
@@ -19,9 +24,9 @@
         Join
       </v-btn>
     </v-row>
-    <Todos class="todos v-card" />
-    <Feed v-if="isJoined && isSprint" class="feed bottom-right-panel feed v-card" />
-    <Stats v-if="stats && isJoined && isBreak" class="bottom-right-panel feed v-card" />
+    <Todos class="todos white shadow" />
+    <Feed v-if="isJoined && isSprint" class="feed bottom-right-panel shadow" />
+    <Stats v-if="stats && isJoined && isBreak" class="bottom-right-panel feed shadow" />
   </div>
 </template>
 
@@ -53,34 +58,55 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+  .v-toolbar {
+    left: 0;
+    right: 0;
+  }
+
+  .theme--light .v-toolbar {
+    background-color: rgba(#F8E9CC, .5);
+  }
+
+  .theme--light .bottom-right-panel {
+    background-color: rgba(#FFFFFE, .7);
+  }
+
+  .theme--dark .v-toolbar, .bottom-right-panel {
+    background-color: rgba(#0D0E16, .7);
+  }
+
   .map {
     position: fixed;
     z-index: 0;
   }
 
   .join-btn {
-    top: 20px;
+    top: 150px;
     margin: auto;
   }
 
   .todos {
     position: fixed;
-    left: 10px;
-    bottom: 10px;
-    width: 450px;
+    left: 50px;
+    bottom: 30px;
+    width: 400px;
     z-index: 1;
   }
 
   .bottom-right-panel {
     position: absolute;
-    right: 40px;
-    bottom: 40px;
-    width: 450px;
+    right: 100px;
+    bottom: 120px;
+    width: 350px;
     z-index: 1;
   }
 
   .feed {
     height: 410px;
+  }
+
+  .shadow {
+    box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.4);
   }
 </style>

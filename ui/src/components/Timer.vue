@@ -1,7 +1,7 @@
 <template>
   <div>
-    <h1 v-if="currentState">{{ timer.minutes }}:{{ timer.seconds }}</h1>
-    <h1 v-else>..:..</h1>
+    <span v-if="currentState">{{ timer.minutes }}:{{ timer.seconds }}</span>
+    <span v-else>..:..</span>
   </div>
 </template>
 
@@ -43,3 +43,10 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  span {
+    font-size: 4em;
+    font-weight: 300;
+  }
+</style>

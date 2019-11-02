@@ -4,8 +4,9 @@
     align="center"
     justify="space-between"
   >
-    <v-col class="pa-0">
+    <v-col>
       <v-checkbox
+        light
         :class="todo.isCompleted ? 'red--text' : ''"
         v-model="isCompleted"
         :label="todo.text"

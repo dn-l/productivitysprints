@@ -8,8 +8,9 @@
       <v-col class="feed pa-3">
         <h2 class="accent--text text-center">...</h2>
         <div
+          :style="{ opacity: 1 - ( index / 4) / 1 }"
           class="pa-3 text-center todo"
-          v-for="{ text, id } in feed"
+          v-for="({ text, id }, index) in feed"
           :key="id"
         >
           {{ text }}
@@ -46,12 +47,11 @@ export default {
 
   .feed {
     height: 250px;
-    overflow-y: auto;
+    overflow-y: hidden;
   }
 
   .todo {
     text-decoration: line-through;
-    text-overflow: ellipsis;
     overflow: hidden;
   }
 
