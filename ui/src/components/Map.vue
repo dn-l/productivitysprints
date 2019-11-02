@@ -3,6 +3,7 @@
     :accessToken="accessToken"
     :mapStyle="mapStyle"
     :renderWorldCopies="false"
+    :interactive="false"
   >
     <MglGeojsonLayer
       layerId="heatmap"

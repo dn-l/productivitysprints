@@ -7,7 +7,7 @@
     {
       "type": "node",
       "request": "attach",
-      "name": "Attach nodemon",
+      "name": "Attach process",
       "processId": "${command:PickProcess}",
       "restart": true,
       "protocol": "inspector",

@@ -48,12 +48,17 @@ const emitStats = () => {
   }
 }
 
-io.on('connection', socket => {
-  let [address] = socket.handshake.headers['x-forwarded-for'].split(',')
-  const user = users.add(socket.id)
+const getClientAddress = (handshake) => {
   if (process.env.NODE_ENV !== 'production') {
-    address = '79.182.55.3'
+    return '79.182.55.3'
   }
+
+  return handshake.headers['x-forwarded-for'].split(',')[0]
+}
+
+io.on('connection', socket => {
+  const address = getClientAddress(socket.handshake)
+  const user = users.add(socket.id)
   const geo = geoip.lookup(address)
   user.setGeo(geo)
   logger.verbose('New user connected', { address, geo })
