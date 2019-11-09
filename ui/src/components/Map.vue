@@ -4,6 +4,7 @@
     :mapStyle="mapStyle"
     :renderWorldCopies="false"
     :interactive="false"
+    :center="[0, -40]"
   >
     <MglGeojsonLayer
       layerId="heatmap"
